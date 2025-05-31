@@ -69,6 +69,16 @@
       [Service]
       SystemCallFilter=
       SystemCallArchitectures=
+      CapabilityBoundingSet=
+      RestrictNamespaces=no
+      RestrictSUIDSGID=no
+      NoNewPrivileges=no
+      ProtectSystem=off
+      ProtectKernelModules=no
+      ProtectKernelTunables=no
+      ProtectControlGroups=no
+      ProtectHome=no
+      ProtectProc=default
     mode: "0644"
 
 - name: Reload systemd
