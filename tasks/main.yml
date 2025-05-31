@@ -68,6 +68,7 @@
     content: |
       [Service]
       SystemCallFilter=
+      SystemCallArchitectures=
     mode: "0644"
 
 - name: Reload systemd
