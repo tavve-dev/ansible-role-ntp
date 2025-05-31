@@ -55,6 +55,25 @@
     - '"systemd-timesyncd.service" in services'
     - services["systemd-timesyncd.service"]["status"] != "not-found"
 
+## seccomp "fixes" for arm64 / container
+- name: Create chronyd override to disable seccomp
+  copy:
+    dest: /etc/systemd/system/chronyd.service.d/no-seccomp.conf
+    content: |
+      [Service]
+      SystemCallFilter=
+    mode: '0644'
+  register: override_created
+  when: ansible_architecture in ['aarch64', 'arm64']
+
+
+- name: Reload systemd and restart chronyd
+  systemd:
+    name: chronyd
+    daemon_reload: yes
+    state: restarted
+  when: override_created.changed
+
 - name: Ensure NTP is running and enabled as configured.
   service:
     name: "{{ ntp_daemon }}"
