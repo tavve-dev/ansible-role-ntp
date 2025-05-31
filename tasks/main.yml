@@ -64,15 +64,12 @@
       SystemCallFilter=
     mode: '0644'
   register: override_created
-  when: ansible_architecture in ['aarch64', 'arm64']
-
 
 - name: Reload systemd and restart chronyd
   systemd:
     name: chronyd
     daemon_reload: yes
     state: restarted
-  when: override_created.changed
 
 - name: Ensure NTP is running and enabled as configured.
   service:
