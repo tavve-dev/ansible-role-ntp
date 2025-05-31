@@ -56,20 +56,23 @@
     - services["systemd-timesyncd.service"]["status"] != "not-found"
 
 ## seccomp "fixes" for arm64 / container
+- name: Ensure chronyd override directory exists
+  file:
+    path: /etc/systemd/system/chronyd.service.d
+    state: directory
+    mode: "0755"
+
 - name: Create chronyd override to disable seccomp
   copy:
     dest: /etc/systemd/system/chronyd.service.d/no-seccomp.conf
     content: |
       [Service]
       SystemCallFilter=
-    mode: '0644'
-  register: override_created
+    mode: "0644"
 
-- name: Reload systemd and restart chronyd
+- name: Reload systemd
   systemd:
-    name: chronyd
     daemon_reload: yes
-    state: restarted
 
 - name: Ensure NTP is running and enabled as configured.
   service:
